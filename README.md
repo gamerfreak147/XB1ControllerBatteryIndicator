@@ -1,36 +1,84 @@
-# XBox One Controller Battery Indicator
-A tray application that shows a battery indicator for an Xbox-ish controller and gives a notification when the battery level drops to (almost) empty. 
+# Xbox Controller Battery Indicator
 
-It was originally written for the XBox One controller since Microsoft dropped all visual hints for low battery, but it should work with any gamepad that can be addressed via XInput (which should be all controllers that work in XBox-controller-enabled games).
+A small Windows tray application that shows the battery and connection status for Xbox-compatible controllers that Windows exposes through XInput.
 
-**Download link for a "ready to run" version at the bottom of this page(or under "Releases" in the side bar)!**  
-(The green download button at the top is for the source code package)
+The app is meant to stay out of the way. It runs in the notification area, updates the tray icon once per second, and shows a quick status popup when you click the tray icon.
 
-When more than one controller is present, the tray icon will cycle through the status display every 5 seconds.
+![Controller status popup](img/controller-status-popup.png "Controller status popup")
 
-![Tray icon](https://i.imgur.com/rxWAsu8.gif "Tray icon cycling through multiple controllers")
+## What it shows
 
-When a controller reaches low battery level, a notification is displayed.  
+- A tray icon for the connected controller status that needs attention first.
+- A popup with a large battery meter for each connected controller.
+- Wireless battery level as one of the broad XInput ranges: Empty, Low, Medium, or Full.
+- Wired or USB-connected status when XInput reports the controller as wired.
+- The last known wireless battery level when a controller is later connected by USB, when that value is available.
+- Low or empty battery warnings, with optional sound settings.
+- Startup, update check, warning, appearance, and language options from the right-click menu.
 
-![Imgur](https://i.imgur.com/LPUBWtl.png "Toast message with low battery warning")
+![Tray status icons](img/tray-status-icons.png "Tray status icons")
 
+## Important battery note
 
-Controllers that will work with this program include:
+After a controller is connected or turned on, Windows/XInput may not report a usable battery value until the controller sends input. Press any button on the controller once after connecting it. Until then, the app may show the controller as waiting for battery data or unknown.
 
-* XBox 360
-* XBox One (model 1537/1697)
-* XB One Elite (model 1698)
-* XB One S (model 1708)
-* XB One Elite 2 (model 1797)
-* XB Series X/S (model 1914)
+## Battery level ranges
 
-Note that these controllers will **only work when you connect them via a dongle that uses Microsofts proprietary protocol**, though is doesn't seem to matter if it's an official or 3rd party version.
-***Bluetooth connections will NOT work properly, see below!***
+XInput does not report an exact percentage. It only reports broad battery levels. The app displays those levels as estimated ranges:
 
-Currently known issues/limitations:
-* Controllers connected via Bluetooth won't report any or a completely wrong battery level. This seems to be an issue with Microsofts BT implementation and I can't do anything about it. See Issue [#49](https://github.com/NiyaShy/XB1ControllerBatteryIndicator/issues/49) for details.
-* initial recognition of a newly connected controller can take a while. It will be displayed as "waiting for battery level data" at first but should switch to battery level after ~10 seconds and a button press. (This might be a limitation of the XInput API.)
+| XInput level | Displayed range |
+| --- | --- |
+| Full | 75-100% |
+| Medium | 50-75% |
+| Low | 25-50% |
+| Empty | 0-25% |
 
-**[You can download the latest version here](https://github.com/NiyaShy/XB1ControllerBatteryIndicator/releases).**  
-Some additional details about how it works and what it shows can be found on the [wiki page](https://github.com/NiyaShy/XB1ControllerBatteryIndicator/wiki).  
-Found a bug or wanna give feedback? Open an issue here in github or leave a comment over on [reddit](https://www.reddit.com/r/xb1cbi).
+## Supported controllers
+
+This app should work with controllers that Windows exposes through XInput, including many Xbox and Xbox-compatible controllers. Known controller families include:
+
+- Xbox 360 controllers
+- Xbox One controllers
+- Xbox One S controllers
+- Xbox One Elite controllers
+- Xbox Elite Series 2 controllers
+- Xbox Series X/S controllers
+- Other gamepads that appear to Windows as XInput controllers
+
+Best results are usually with wired USB or the Xbox Wireless Adapter. Bluetooth behavior depends on the controller model, firmware, Windows version, and driver stack.
+
+## Known limitations
+
+- Windows only.
+- XInput only. Controllers that only expose DirectInput, HID, Steam Input, or vendor-specific APIs may not appear here.
+- XInput supports up to four controller slots, so the app checks up to four controllers.
+- Battery values are broad ranges, not exact percentages.
+- Battery data can be delayed until a button is pressed on the controller.
+- Bluetooth-connected controllers may report no battery data, stale battery data, or incorrect battery data. This is a Windows/XInput limitation, not something the app can fully correct.
+- USB or wired status does not always prove the battery is actively charging. The app can show USB connected or likely charging, but exact charging state may not be available through XInput.
+- Tray icons are limited by Windows notification-area scaling. The icons were simplified to be more readable, but the taskbar can still make small icons hard to read on some displays.
+
+## How to use
+
+1. Download the latest release package from the Releases page.
+2. Extract the zip file.
+3. Run `XB1ControllerBatteryIndicator.exe`.
+4. Connect or turn on your controller.
+5. Press any controller button once if the app is waiting for battery data.
+6. Left-click the tray icon to view the status popup.
+7. Right-click the tray icon to change settings or exit the app.
+
+## Settings
+
+Right-click the tray icon to access:
+
+- Start with Windows
+- Check for new version on start
+- USB connected notification
+- Empty battery warning sound
+- Repeat warning sound loop
+- Compact popup
+- Animated charging icon
+- Flash empty battery alert
+- Language selection
+- Exit
